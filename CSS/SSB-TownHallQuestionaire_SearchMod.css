@@ -1,0 +1,20 @@
+div[name="srcQuestions"] table.FixedTables1>tbody>tr>td {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+div[name="srcQuestions"] table.FixedTables1>tbody>tr>td, div[name="srcQuestions"] .fixedHead>table>tbody>tr>td {
+    border-right: none !important;
+}
+
+div[name="srcQuestions"] table.FixedTables1>tbody>tr>td>div {
+    font-size: 13px !important;
+}
+
+div[name="srcQuestions"] .headerSearchRow:hover {
+    border-bottom: 1px solid #d4dfe9 !important;
+}
+
+div[name="srcQuestions"] span.srcDetailedRedirect {
+    cursor: pointer !important;
+}
