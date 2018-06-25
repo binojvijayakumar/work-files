@@ -4,7 +4,7 @@ function decrementGroupHeaderValue(searchCtrl) {
         var lblValSplit = lblElement
             .text()
             .trim()
-            .split(/(Form\s\d{3,4}\s{1,2})(\()(\d)(\sItems?\))/g);
+            .split(/(Form\s\d{3,4}\s{1,2})(\()(\d*)(\sItems?\))/g);
         lblValSplit[3] = parseInt(lblValSplit[3]) - 1;
         lblElement.text(lblValSplit.join(''));
     });
