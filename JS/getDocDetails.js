@@ -1,4 +1,4 @@
-function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, ctrlid) {
+function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, ctrlid, samName) {
     var apiData = {
         "SortByColumn": "DocumentID",
         "SortType": "DESC",
@@ -20,6 +20,10 @@ function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, c
     $.ajax({
         type: "POST",
         url: apiURL,//"//qa4svc.apps.tax/api/documents/GetDocumentsFromDB/1/",
+        headers: {
+            'CSKII': '35bba0d9-f7e5-413a-8815-d2945c55b169',
+            'CSKII_UPN': samName
+        },
         data: JSON.stringify(apiData),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
