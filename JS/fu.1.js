@@ -1,4 +1,5 @@
-function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, taxProcID, targetUrl, serverRelativeUrl, libraryName, libraryInternalName, loginUserName, uploadServiceAPIUrl, statusCtrl) {
+function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, taxProcID, targetUrl, serverRelativeUrl, libraryName,
+    libraryInternalName, loginUserName, uploadServiceAPIUrl, statusCtrl, clientKey, userName) {
     var file = getFile(fileContent, fileName);
     var documentEntity = getDocumentEntity(metaDataCollection, jurID, taxProcID, fileName);
     var messagedata = getMessagedata(targetUrl, serverRelativeUrl, libraryName, libraryInternalName, loginUserName, uploadServiceAPIUrl);
@@ -19,6 +20,8 @@ function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, 
     // data.append('mySiteFileName', '');
     var objXhr = new XMLHttpRequest();
     objXhr.open('POST', messagedata.uploadServiceAPIUrl, true);
+    objXhr.setRequestHeader('CSKII', clientKey);
+    objXhr.setRequestHeader('CSKII_UPN', userName);
     objXhr.onreadystatechange = function () {
         if (statusCtrl && statusCtrl.split('_').length == 3 && objXhr.readyState === XMLHttpRequest.DONE) {
             $('#' + statusCtrl).val(objXhr.status);
