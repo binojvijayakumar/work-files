@@ -1,0 +1,24 @@
+#s4-titlerow, #sideNavBox, #WebPartTitleWPQ2, #layoutsTable .ms-rte-layoutszone-inner>br {
+    display: none !important;
+}
+
+#s4-ribbonrow {
+    display: none !important;
+}
+
+#DeltaPlaceHolderMain {
+    left: 0 !important;
+    position: absolute !important;
+}
+
+#layoutsTable {
+    margin-top: -20px !important;
+}
+
+#layoutsTable .ms-rtestate-read.ms-rte-wpbox {
+    height: 0 !important;
+}
+
+#contentRow {
+    padding: 0 !important;
+}
