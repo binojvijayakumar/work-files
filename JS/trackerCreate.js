@@ -35,7 +35,7 @@ function execPostRequest_CreateTracker(ctrlTrigger, portalServiceUrl, clientKey,
                     message.push(item);
                 }
             } if (typeof result[message[0]] === 'undefined') {
-                alert('Tracker created Successfully');
+                // alert('Tracker created Successfully');
                 if (ctrlTrigger && ctrlTrigger.split('_').length == 3) {
                     var randVal = parseInt(Math.random() * 10000);
                     $('#' + ctrlTrigger).val(randVal);
