@@ -3,7 +3,7 @@ function DeleteDocumentAPI(ids, tpid, jurid, targeturl, ispublished, apiurl, ctr
     custom_headers['CSKII'] = clientKey;
     custom_headers['CSKII_UPN'] = userName;
     var ajaxData = {
-        'DocumentIDs': ids.split(',').map(function (x) { return parseInt(x) }),
+        'DocumentIDs': $.map(ids.split(','), function (x) { return parseInt(x) }),
         'TPID': parseInt(tpid),
         'JurID': parseInt(jurid),
         'TargetUrl': targeturl,
@@ -16,7 +16,7 @@ function DeleteDocumentAPI(ids, tpid, jurid, targeturl, ispublished, apiurl, ctr
         cache: false,
         contentType: 'application/json',
         url: apiurl,
-        data: ajaxData,
+        data: JSON.stringify(ajaxData),
         success: function (response) {
             if (ctrlid.split('_').length == 3) {
                 $('#' + ctrlid).val(JSON.stringify(response));
