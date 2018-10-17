@@ -1,3 +1,3 @@
 function hideSearchHeader(ctrlid) {
-    $('div#' + ctrlid + '_fixedHead').css('display', 'none');
+   $('<style>div#' + ctrlid + '_fixedHead{display:none}</style>').appendTo('head');;
 }
