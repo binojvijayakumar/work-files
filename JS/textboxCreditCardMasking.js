@@ -1,6 +1,5 @@
 function textboxCreditCardMasking(sourceCtrl, destinationCtrl, showLastN, focusColour) {
-    showLastN = showLastN || 4;
-    showLastN = parseInt(showLastN);
+    showLastN = parent(showLastN || 4);
     focusColour = focusColour || 'orange';
     if (!(sourceCtrl && sourceCtrl.split('_').length == 3 && destinationCtrl && destinationCtrl.split('_').length == 3)) return;
 

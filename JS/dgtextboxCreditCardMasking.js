@@ -1,6 +1,5 @@
 function dgtextboxCreditCardMasking(dgctrlID, sourceCtrlName, destinationCtrlName, showLastN, focusColour) {
-    showLastN = showLastN || 4;
-    showLastN = parseInt(showLastN);
+    showLastN = parent(showLastN || 4);
     focusColour = focusColour || 'orange';
     var sourceCtrl, destinationCtrl;
     if (!(dgctrlID && dgctrlID.split('_').length == 3 && sourceCtrlName && destinationCtrlName)) return;
