@@ -1,21 +1,40 @@
-function textboxCreditCardMasking(sourceCtrl, destinationCtrl, n) {
-    n = n || 4;
+function textboxCreditCardMasking(sourceCtrl, destinationCtrl, showLastN, focusColour) {
+    showLastN = showLastN || 4;
+    showLastN = parseInt(showLastN);
+    focusColour = focusColour || 'orange';
     if (!(sourceCtrl && sourceCtrl.split('_').length == 3 && destinationCtrl && destinationCtrl.split('_').length == 3)) return;
 
     destinationCtrl = $('#' + destinationCtrl);
     sourceCtrl = $('#' + sourceCtrl);
-
+    appendManualFocusClass(focusColour);
     sourceCtrl.css('opacity', 0);
 
     destinationCtrl.on('focus', function () {
-        sourceCtrl.focus();
+        $('.manualFocusMaskTB').removeClass('manualFocusMaskTB');
+        destinationCtrl.addClass('manualFocusMaskTB');
+        setTimeout(function () {
+            sourceCtrl.focus();
+        }, 10);
     });
 
-    sourceCtrl.on('keyup', function () {
-        destinationCtrl.val(sourceCtrl.val().replace(new RegExp('(\\d{' + (sourceCtrl.val().length - 4) + '})(\\d{' + n + '})'), function (match, maskVal, endVal) { return '*'.repeat(maskVal.length) + endVal; }));
+    sourceCtrl.on('keyup change', function () {
+        destinationCtrl.val(sourceCtrl.val().replace(new RegExp('(\\d{' + (sourceCtrl.val().length - showLastN) + '})(\\d{' + showLastN + '})'), function (match, maskVal, endVal) { return '*'.repeat(maskVal.length) + endVal; }));
     });
 
+    $(document).on('keyup mouseup', function () {
+        if (sourceCtrl && $(document.activeElement).attr('id') != sourceCtrl.attr('id')) {
+            destinationCtrl.removeClass('manualFocusMaskTB');
+        }
+    });
 
+}
+
+var appendManualFocusClassApplied = false;
+function appendManualFocusClass(focusColour) {
+    if (!appendManualFocusClassApplied) {
+        $('<style>.manualFocusMaskTB{box-shadow:inset 0px 0px 0px 1px ' + focusColour + ' !important;}</style>').appendTo('head');
+        appendManualFocusClassApplied = true;
+    }
 }
 
 if (!String.prototype.repeat) {

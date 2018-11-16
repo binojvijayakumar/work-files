@@ -1,22 +1,58 @@
-function dgtextboxCreditCardMasking(sourceCtrl, dgctrlID, destinationCtrlName, n) {
-    n = n || 4;
-    if (!(sourceCtrl && sourceCtrl.split('_').length == 3 && dgctrlID && dgctrlID.split('_').length == 3 && destinationCtrlName)) return;
-    sourceCtrl = $('#' + sourceCtrl);
-    var destinationCtrl;
+function dgtextboxCreditCardMasking(dgctrlID, sourceCtrlName, destinationCtrlName, showLastN, focusColour) {
+    showLastN = showLastN || 4;
+    showLastN = parseInt(showLastN);
+    focusColour = focusColour || 'orange';
+    var sourceCtrl, destinationCtrl;
+    if (!(dgctrlID && dgctrlID.split('_').length == 3 && sourceCtrlName && destinationCtrlName)) return;
 
-    sourceCtrl.css('opacity', 0);
+    appendManualFocusClass(focusColour);
+    hideColinDG(dgctrlID, sourceCtrlName);
+
+    $(document).on('keyup mouseup', function () {
+        if (sourceCtrl && $(document.activeElement).attr('id') != sourceCtrl.attr('id')) {
+            destinationCtrl.removeClass('manualFocusMaskTB');
+        }
+    });
+
 
     $('#' + dgctrlID + '_parent_td').on('focus', '[name="' + destinationCtrlName + '"]', function () {
         destinationCtrl = $(this);
-        sourceCtrl.val('');
-        sourceCtrl.focus();
+        $('.manualFocusMaskTB').removeClass('manualFocusMaskTB');
+        sourceCtrl = $(this).closest('tr').find('[name="' + sourceCtrlName + '"]');
+        if (sourceCtrl) {
+            destinationCtrl.addClass('manualFocusMaskTB');
+
+            sourceCtrl.on('keyup change', function () {
+                destinationCtrl.val(sourceCtrl.val().replace(new RegExp('(\\d{' + (sourceCtrl.val().length - showLastN) + '})(\\d{' + showLastN + '})'), function (match, maskVal, endVal) { return '*'.repeat(maskVal.length) + endVal; }));
+            });
+            setTimeout(function () {
+                sourceCtrl.focus();
+            }, 10);
+        }
     });
+}
 
-    sourceCtrl.on('keyup', function () {
-        destinationCtrl.val(sourceCtrl.val().replace(new RegExp('(\\d{' + (sourceCtrl.val().length - 4) + '})(\\d{' + n + '})'), function (match, maskVal, endVal) { return '*'.repeat(maskVal.length) + endVal; }));
-    });
+function activeElementChanged(sourceCtrl, destinationCtrl) {
+    if (sourceCtrl && $(document.activeElement).attr('id') != sourceCtrl.attr('id')) {
+        destinationCtrl.removeClass('manualFocusMaskTB');
+    }
+}
 
+var hideColinDGInitialised = false;
+function hideColinDG(dgctrlID, ctrlName) {
+    if (!hideColinDGInitialised) {
+        var hideIndex = $('#' + dgctrlID + '_parent_td [name="' + ctrlName + '"]').closest('.clcontainer').index() + 1;
+        $('<style>#' + dgctrlID + '_parent_td .mainTable_div .clcontainer:nth-of-type(' + hideIndex + '), #' + dgctrlID + '_parent_td #fixedHead>.mainTable th:nth-of-type(' + hideIndex + '){opacity:0}#' + dgctrlID + '_parent_td #fixedHead>.mainTable th:nth-of-type(' + hideIndex + '){display:none}</style>').appendTo('head');
+        hideColinDGInitialised = true;
+    }
+}
 
+var appendManualFocusClassApplied = false;
+function appendManualFocusClass(focusColour) {
+    if (!appendManualFocusClassApplied) {
+        $('<style>.clcontrol-dynamicgrid table.mainTable>tbody>tr>td input[type="text"].manualFocusMaskTB{box-shadow:inset 0px 0px 0px 1px ' + focusColour + ' !important;border-radius:0 !important;}</style>').appendTo('head');
+        appendManualFocusClassApplied = true;
+    }
 }
 
 if (!String.prototype.repeat) {
