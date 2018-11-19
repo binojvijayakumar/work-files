@@ -4,7 +4,7 @@ function dgtextboxCreditCardMasking(dgctrlID, sourceCtrlName, destinationCtrlNam
     var sourceCtrl, destinationCtrl;
     if (!(dgctrlID && dgctrlID.split('_').length == 3 && sourceCtrlName && destinationCtrlName)) return;
 
-    appendManualFocusClass(focusColour);
+    appendManualFocusClassDGTB(focusColour);
     hideColinDG(dgctrlID, sourceCtrlName);
 
     $(document).on('keyup mouseup', function () {
@@ -46,11 +46,11 @@ function hideColinDG(dgctrlID, ctrlName) {
     }
 }
 
-var appendManualFocusClassApplied = false;
-function appendManualFocusClass(focusColour) {
-    if (!appendManualFocusClassApplied) {
+var appendManualFocusClassAppliedDGTB = false;
+function appendManualFocusClassDGTB(focusColour) {
+    if (!appendManualFocusClassAppliedDGTB) {
         $('<style>.clcontrol-dynamicgrid table.mainTable>tbody>tr>td input[type="text"].manualFocusMaskTB{box-shadow:inset 0px 0px 0px 1px ' + focusColour + ' !important;border-radius:0 !important;}</style>').appendTo('head');
-        appendManualFocusClassApplied = true;
+        appendManualFocusClassAppliedDGTB = true;
     }
 }
 
