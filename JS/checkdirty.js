@@ -48,32 +48,32 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
             'Yes': function () {
                 _userDialogConfirm = true;
                 if (yesTrigger && yesTrigger.split('_').length == 3) {
-                    var randVal = parseInt(Math.random() * 10000);
-                    $('#' + yesTrigger).val(randVal);
-                    textBoxChangeEvent(yesTrigger, $('#' + yesTrigger).attr('name'), randVal, '', '');
+                    // var randVal = parseInt(Math.random() * 10000);
+                    $('#' + yesTrigger).val(newTabID);
+                    textBoxChangeEvent(yesTrigger, $('#' + yesTrigger).attr('name'), newTabID, '', '');
                 }
                 $(this).dialog('close');
                 _isDirty_subForm = _isDirty = false;
-                $('#' + tabCtrlID).tabs('option', 'active', newTabID);
+                // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
             'No': function () {
                 _userDialogConfirm = true;
                 if (noTrigger && noTrigger.split('_').length == 3) {
-                    var randVal = parseInt(Math.random() * 10000);
-                    $('#' + noTrigger).val(randVal);
-                    textBoxChangeEvent(noTrigger, $('#' + noTrigger).attr('name'), randVal, '', '');
+                    // var randVal = parseInt(Math.random() * 10000);
+                    $('#' + noTrigger).val(newTabID);
+                    textBoxChangeEvent(noTrigger, $('#' + noTrigger).attr('name'), newTabID, '', '');
                 }
                 $(this).dialog('close');
                 _isDirty_subForm = _isDirty = false;
-                $('#' + tabCtrlID).tabs('option', 'active', newTabID);
+                // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
             'Cancel': function () {
                 _userDialogConfirm = false;
                 $(this).dialog('close');
                 if (cancelTrigger && cancelTrigger.split('_').length == 3) {
-                    var randVal = parseInt(Math.random() * 10000);
-                    $('#' + cancelTrigger).val(randVal);
-                    textBoxChangeEvent(cancelTrigger, $('#' + cancelTrigger).attr('name'), randVal, '', '');
+                    // var randVal = parseInt(Math.random() * 10000);
+                    $('#' + cancelTrigger).val(newTabID);
+                    textBoxChangeEvent(cancelTrigger, $('#' + cancelTrigger).attr('name'), newTabID, '', '');
                 }
             }
         }
