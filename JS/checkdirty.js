@@ -15,7 +15,7 @@ function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
         return;
     }
 
-    $('<style>.noTitleDialog{z-index:1002}.noTitleDialog+.ui-widget-overlay.ui-front{z-index:1001}.noTitleDialog .ui-dialog-titlebar {display:none}</style>').appendTo('head');
+    $('<style>.noTitleDialog{z-index:9991}.noTitleDialog+.ui-widget-overlay.ui-front{z-index:9990}.noTitleDialog .ui-dialog-titlebar {display:none}</style>').appendTo('head');
     $('#' + controlInForm)
         .closest('.clcontrol-form')
         .on('change', ':input', function () {
