@@ -1,7 +1,7 @@
 var _isDirty = _isDirty_subForm = _userDialogConfirm = false;
 var _excludedCtrlsArray = _excludedCtrlsArray_subForm = [];
 var _contrilInFormErrorMsg = '"setFormControlsDirty(controlInForm, excludedCtrls, isSubForm)" First parameter is not provided (or proper).';
-var _isDirtyMessage = 'There are unsaved changes in current tab. Do you want to save the changes on this tab before proceeding?';
+var _isDirtyMessage = 'There are unsaved changes on current page. Do you want to save the changes before proceeding?<br/><br/>Click on <b>Save</b> to save the changes<br/><br/>Click on <b>Don\'t Save</b> to not save the changes<br/><br/>Click on <b>Cancel</b> for no action';
 
 function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
     isSubForm = transformValuetoBoolean(isSubForm);
@@ -15,7 +15,7 @@ function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
         return;
     }
 
-    $('<style>.noTitleDialog{z-index:9991}.noTitleDialog+.ui-widget-overlay.ui-front{z-index:9990}.noTitleDialog .ui-dialog-titlebar {display:none}</style>').appendTo('head');
+    $('<style>.dirtyDialog{z-index:9991}.dirtyDialog+.ui-widget-overlay.ui-front{z-index:9990}.dirtyDialog .ui-dialog-titlebar {/*display:none*/}</style>').appendTo('head');
     $('#' + controlInForm)
         .closest('.clcontrol-form')
         .on('change', ':input', function () {
@@ -39,13 +39,14 @@ function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
 
 function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTrigger) {
     var _idDirtyDialog = $('<div>').html(_isDirtyMessage).dialog({
-        // _dirtyDialog = $("#tabDirtyDialog").dialog({
+        title: 'Unsaved Changes',
+        width: 400,
         autoOpen: false,
         modal: true,
-        dialogClass: 'noTitleDialog',
+        dialogClass: 'dirtyDialog',
         close: function (e, u) { $(this).remove(); },
         buttons: {
-            'Yes': function () {
+            'Save': function () {
                 _userDialogConfirm = true;
                 if (yesTrigger && yesTrigger.split('_').length == 3) {
                     // var randVal = parseInt(Math.random() * 10000);
@@ -56,7 +57,7 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
                 _isDirty_subForm = _isDirty = false;
                 // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
-            'No': function () {
+            'Don\'t Save': function () {
                 _userDialogConfirm = true;
                 if (noTrigger && noTrigger.split('_').length == 3) {
                     // var randVal = parseInt(Math.random() * 10000);
