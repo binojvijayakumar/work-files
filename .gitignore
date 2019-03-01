@@ -1,3 +1,4 @@
 #ignore minified files
 *.min.js
 *.min.css
+/index.html

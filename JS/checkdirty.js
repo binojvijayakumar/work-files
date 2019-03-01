@@ -1,7 +1,23 @@
 var _isDirty = _isDirty_subForm = _userDialogConfirm = false;
 var _excludedCtrlsArray = _excludedCtrlsArray_subForm = [];
+var _postMessageTargetUrl = '';
 var _contrilInFormErrorMsg = '"setFormControlsDirty(controlInForm, excludedCtrls, isSubForm)" First parameter is not provided (or proper).';
 var _isDirtyMessage = 'There are unsaved changes on current page. Do you want to save the changes before proceeding?<br/><br/>Click on <b>Save</b> to save the changes<br/><br/>Click on <b>Don\'t Save</b> to not save the changes<br/><br/>Click on <b>Cancel</b> for no action';
+
+var getDirtyFormValue = function (isSubForm) {
+    return isSubForm ? _isDirty_subForm : _isDirty;
+}
+
+var setDirtyFormValue = function (value, isSubForm) {
+    if (getDirtyFormValue(isSubForm) != value) {
+        sendDirtyFormValuePostMessage(value);
+    }
+    isSubForm ? (_isDirty_subForm = value) : (_isDirty = value);
+}
+
+var sendDirtyFormValuePostMessage = function (value) {
+    window.parent.postMessage(!value ? 'formValid' : 'formDirty', _postMessageTargetUrl);
+}
 
 function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
     isSubForm = transformValuetoBoolean(isSubForm);
@@ -33,7 +49,8 @@ function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
                 ) < 0 ? false : true)) {
                 return;
             }
-            isSubForm ? (_isDirty_subForm = true) : (_isDirty = true);
+            setDirtyFormValue(true, isSubForm);
+            // isSubForm ? (_isDirty_subForm = true) : (_isDirty = true);
         });
 }
 
@@ -54,7 +71,9 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
                     textBoxChangeEvent(yesTrigger, $('#' + yesTrigger).attr('name'), newTabID, '', '');
                 }
                 $(this).dialog('close');
-                _isDirty_subForm = _isDirty = false;
+                setDirtyFormValue(false);
+                setDirtyFormValue(false, true);
+                // _isDirty_subForm = _isDirty = false;
                 // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
             'Don\'t Save': function () {
@@ -65,7 +84,9 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
                     textBoxChangeEvent(noTrigger, $('#' + noTrigger).attr('name'), newTabID, '', '');
                 }
                 $(this).dialog('close');
-                _isDirty_subForm = _isDirty = false;
+                setDirtyFormValue(false);
+                setDirtyFormValue(false, true);
+                // _isDirty_subForm = _isDirty = false;
                 // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
             'Cancel': function () {
@@ -84,15 +105,18 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
 
 function setFormControlsDirtyValue(state, isSubForm) {
     isSubForm = transformValuetoBoolean(isSubForm);
-    isSubForm ? (_isDirty_subForm = !!parseInt(state)) : (_isDirty = !!parseInt(state));
+    setDirtyFormValue(!!parseInt(state), isSubForm);
+    // isSubForm ? (_isDirty_subForm = !!parseInt(state)) : (_isDirty = !!parseInt(state));
 }
 
 function isFormControlsDirty(isSubForm) {
     isSubForm = transformValuetoBoolean(isSubForm);
-    return isSubForm ? (_isDirty_subForm ? 1 : 0) : (_isDirty ? 1 : 0);
+    return getDirtyFormValue(isSubForm) ? 1 : 0;
+    // return isSubForm ? (_isDirty_subForm ? 1 : 0) : (_isDirty ? 1 : 0);
 }
 
-function setTabDirtyCheckEvent(tabCtrlID, yesTrigger, noTrigger, cancelTrigger) {
+function setTabDirtyCheckEvent(tabCtrlID, yesTrigger, noTrigger, cancelTrigger, postMessageUrl) {
+    _postMessageTargetUrl = postMessageUrl;
     $('#' + tabCtrlID).on('tabsbeforeactivate', function (event, ui) {
         // if (_isDirty &&
         //     !confirm(_isDirtyMessage)) {
@@ -111,7 +135,7 @@ function setTabDirtyCheckEvent(tabCtrlID, yesTrigger, noTrigger, cancelTrigger) 
         //     }
         //     return true;
         // }
-        if (!_userDialogConfirm && _isDirty) {
+        if (!_userDialogConfirm && getDirtyFormValue(false)) {
             var newTabID = ui.newTab.index() / 2;
             showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTrigger);
             return false;
