@@ -1,6 +1,6 @@
 //Requested by Gopika - Deloitte - Internal Check List
 
-function searchModifyGroupedIdentifierText(searchCtrl, newKeyWordSingular, colsToValidate, validateKey) {
+var searchModifyGroupedIdentifierText = function (searchCtrl, newKeyWordSingular, colsToValidate, validateKey) {
     colsToValidate = colsToValidate && colsToValidate.split(',').map(function (col) { return ':nth-child(' + (parseInt(col, 10) + 1) + ')'; });
     $('table#' + searchCtrl + '_table>tbody>tr').each(function () {
         var lblElement = $(this).find('td > div > div > label');
@@ -9,7 +9,6 @@ function searchModifyGroupedIdentifierText(searchCtrl, newKeyWordSingular, colsT
             .trim()
             .split(/(\()(\d)(\s+)(Item)(s?)(\))/g);
         lblTextSplitArr[4] = newKeyWordSingular;
-
 
         if (parseInt(lblTextSplitArr[2], 10) === 1 && colsToValidate && colsToValidate.length > 0) {
             var colTextValidationMatches = [];
@@ -21,6 +20,7 @@ function searchModifyGroupedIdentifierText(searchCtrl, newKeyWordSingular, colsT
                 });
             if (colTextValidationMatches.every(function (el) { return el === true; })) {
                 lblTextSplitArr[2] = 0;
+                lblTextSplitArr[4] += 's';
             }
         }
 

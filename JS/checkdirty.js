@@ -1,60 +1,29 @@
-var _isDirty = _isDirty_subForm = _userDialogConfirm = false;
-var _excludedCtrlsArray = _excludedCtrlsArray_subForm = [];
+var _isDirty = _userDialogConfirm = _activeTabNotifier = _logResults = false;
+var _excludedCtrlsArray = [];
 var _postMessageTargetUrl = '';
-var _contrilInFormErrorMsg = '"setFormControlsDirty(controlInForm, excludedCtrls, isSubForm)" First parameter is not provided (or proper).';
+var _controlInFormErrorMsg = 'First parameter is not provided (or proper) for function "setFormControlsDirty".';
 var _isDirtyMessage = 'There are unsaved changes on current page. Do you want to save the changes before proceeding?<br/><br/>Click on <b>Save</b> to save the changes<br/><br/>Click on <b>Don\'t Save</b> to not save the changes<br/><br/>Click on <b>Cancel</b> for no action';
 
-var getDirtyFormValue = function (isSubForm) {
-    return isSubForm ? _isDirty_subForm : _isDirty;
+var getDirtyFormValue = function () {
+    return _isDirty;
 }
 
-var setDirtyFormValue = function (value, isSubForm) {
-    if (getDirtyFormValue(isSubForm) != value) {
+var setDirtyFormValue = function (value) {
+    if (getDirtyFormValue() != value) {
         sendDirtyFormValuePostMessage(value);
     }
-    isSubForm ? (_isDirty_subForm = value) : (_isDirty = value);
+    _isDirty = value;
 }
 
 var sendDirtyFormValuePostMessage = function (value) {
-    window.parent.postMessage(!value ? 'formValid' : 'formDirty', _postMessageTargetUrl);
+    if (!_postMessageTargetUrl) return;
+    var postMessageValue = !value ? 'formValid' : 'formDirty';
+    if (_logResults) console.log({ targetUrl: _postMessageTargetUrl, value: postMessageValue });
+    window.top.postMessage(postMessageValue, _postMessageTargetUrl);
+
 }
 
-function setFormControlsDirty(controlInForm, excludedCtrls, isSubForm) {
-    isSubForm = transformValuetoBoolean(isSubForm);
-    if (excludedCtrls) {
-        isSubForm ?
-            _excludedCtrlsArray_subForm = excludedCtrls.split(',') :
-            _excludedCtrlsArray = excludedCtrls.split(',');
-    }
-    if (!controlInForm && controlInForm.split('_').length != 3) {
-        alert(_contrilInFormErrorMsg);
-        return;
-    }
-
-    $('<style>.dirtyDialog{z-index:9991}.dirtyDialog+.ui-widget-overlay.ui-front{z-index:9990}.dirtyDialog .ui-dialog-titlebar {/*display:none*/}</style>').appendTo('head');
-    $('#' + controlInForm)
-        .closest('.clcontrol-form')
-        .on('change', ':input', function () {
-            var el = this;
-            if (el.type == "button" ||
-                el.type == "reset" ||
-                el.type == "submit" ||
-                ($.inArray(
-                    el.name,
-                    isSubForm ? _excludedCtrlsArray_subForm : _excludedCtrlsArray
-                ) < 0 ? false : true) ||
-                ($.inArray(
-                    el.id,
-                    isSubForm ? _excludedCtrlsArray_subForm : _excludedCtrlsArray
-                ) < 0 ? false : true)) {
-                return;
-            }
-            setDirtyFormValue(true, isSubForm);
-            // isSubForm ? (_isDirty_subForm = true) : (_isDirty = true);
-        });
-}
-
-function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTrigger) {
+var showIsDirtyDialog = function (newTabID, yesTrigger, noTrigger, cancelTrigger) {
     var _idDirtyDialog = $('<div>').html(_isDirtyMessage).dialog({
         title: 'Unsaved Changes',
         width: 400,
@@ -72,9 +41,6 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
                 }
                 $(this).dialog('close');
                 setDirtyFormValue(false);
-                setDirtyFormValue(false, true);
-                // _isDirty_subForm = _isDirty = false;
-                // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
             'Don\'t Save': function () {
                 _userDialogConfirm = true;
@@ -85,9 +51,6 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
                 }
                 $(this).dialog('close');
                 setDirtyFormValue(false);
-                setDirtyFormValue(false, true);
-                // _isDirty_subForm = _isDirty = false;
-                // $('#' + tabCtrlID).tabs('option', 'active', newTabID);
             },
             'Cancel': function () {
                 _userDialogConfirm = false;
@@ -103,48 +66,72 @@ function showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTri
     $(_idDirtyDialog).dialog('open');
 }
 
-function setFormControlsDirtyValue(state, isSubForm) {
-    isSubForm = transformValuetoBoolean(isSubForm);
-    setDirtyFormValue(!!parseInt(state), isSubForm);
-    // isSubForm ? (_isDirty_subForm = !!parseInt(state)) : (_isDirty = !!parseInt(state));
+var setFormControlsDirtyValue = function (state) {
+    setDirtyFormValue(!!parseInt(state));
 }
 
-function isFormControlsDirty(isSubForm) {
-    isSubForm = transformValuetoBoolean(isSubForm);
-    return getDirtyFormValue(isSubForm) ? 1 : 0;
-    // return isSubForm ? (_isDirty_subForm ? 1 : 0) : (_isDirty ? 1 : 0);
+var isFormControlsDirty = function () {
+    return getDirtyFormValue() ? 1 : 0;
 }
 
-function setTabDirtyCheckEvent(tabCtrlID, yesTrigger, noTrigger, cancelTrigger, postMessageUrl) {
+var setTabDirtyCheckEvent = function (tabCtrlID, yesTrigger, noTrigger, cancelTrigger, postMessageUrl, logResults) {
     _postMessageTargetUrl = postMessageUrl;
+    _logResults = logResults === 'logResults';
+    sendDirtyFormValuePostMessage(false);
     $('#' + tabCtrlID).on('tabsbeforeactivate', function (event, ui) {
-        // if (_isDirty &&
-        //     !confirm(_isDirtyMessage)) {
-        //     if (cancelTrigger && cancelTrigger.split('_').length == 3) {
-        //         var randVal = parseInt(Math.random() * 10000);
-        //         $('#' + cancelTrigger).val(randVal);
-        //         textBoxChangeEvent(cancelTrigger, $('#' + cancelTrigger).attr('name'), randVal, '', '');
-        //     }
-        //     return false
-        // } else {
-        //     _isDirty_subForm = _isDirty = false;
-        //     if (okTrigger && okTrigger.split('_').length == 3) {
-        //         var randVal = parseInt(Math.random() * 10000);
-        //         $('#' + okTrigger).val(randVal);
-        //         textBoxChangeEvent(okTrigger, $('#' + okTrigger).attr('name'), randVal, '', '');
-        //     }
-        //     return true;
-        // }
-        if (!_userDialogConfirm && getDirtyFormValue(false)) {
+        if (!_userDialogConfirm && getDirtyFormValue()) {
             var newTabID = ui.newTab.index() / 2;
-            showIsDirtyDialog(tabCtrlID, newTabID, yesTrigger, noTrigger, cancelTrigger);
+            showIsDirtyDialog(newTabID, yesTrigger, noTrigger, cancelTrigger);
             return false;
         }
         _userDialogConfirm = false;
     });
 }
 
-function transformValuetoBoolean(isSubForm) {
-    return !!isSubForm &&
-        $.trim(isSubForm).toLowerCase() == 'true';
+Array.prototype.pushArray = function() {
+    var toPush = this.concat.apply([], arguments);
+    for (var i = 0, len = toPush.length; i < len; ++i) {
+        this.push(toPush[i]);
+    }
+};
+
+var setFormControlsDirty = function (controlInForm, excludedCtrls) {
+    if (excludedCtrls) {
+        _excludedCtrlsArray.pushArray(excludedCtrls.split(','));
+    }
+    if (!controlInForm && controlInForm.split('_').length != 3) {
+        alert(_controlInFormErrorMsg);
+        return;
+    }
+
+    $('<style>.dirtyDialog{z-index:9991}.dirtyDialog+.ui-widget-overlay.ui-front{z-index:9990}.dirtyDialog .ui-dialog-titlebar {/*display:none*/}</style>').appendTo('head');
+
+    $('#' + controlInForm)
+        .closest('.clcontrol-form')
+        .on('change', ':input', function () {
+            var el = this;
+            if (el.type == "button" ||
+                el.type == "reset" ||
+                el.type == "submit" ||
+                ($.inArray(el.name, _excludedCtrlsArray) < 0 ? false : true) ||
+                ($.inArray(el.id, _excludedCtrlsArray) < 0 ? false : true)
+            ) return;
+            setDirtyFormValue(true);
+            var activeTabName = $(el).closest('.clcontrol-tabcontrol').attr('dirtyCheckActivatedTab');
+            if (typeof activeTabName !== typeof undefined && activeTabName !== false && _activeTabNotifier) {
+                $('#' + _activeTabNotifier).val(activeTabName);
+                textBoxChangeEvent(_activeTabNotifier, $('#' + _activeTabNotifier).attr('name'), activeTabName, '', '');
+            }
+        });
+}
+
+var assignTabName = function (tabDetails, activeTabNotifier) {
+    tabDetails = tabDetails.split('#');
+    $.each(tabDetails, function (i, item) {
+        var tabDetail = item.split(':');
+        $('#' + tabDetail[0]).attr('dirtyCheckActivatedTab', tabDetail[1]);
+    });
+    if (activeTabNotifier && activeTabNotifier.split('_').length == 3) {
+        _activeTabNotifier = activeTabNotifier;
+    }
 }
