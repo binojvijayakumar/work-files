@@ -54,12 +54,3 @@ var setFormControlsDirtyCheckEvent = function (controlInForm, excludedCtrls, pos
             setDirtyFormValue(true);
         });
 }
-
-$(function () {
-    var parentTriggerControl = $('input[type="Text"][name="txtFormDirtyCheckScriptLoaded"]');
-    if (parentTriggerControl) {
-        var randVal = parseInt(Math.random() * 10000);
-        parentTriggerControl.val(randVal);
-        textBoxChangeEvent(parentTriggerControl.attr('id'), parentTriggerControl.attr('name'), randVal, '', '');
-    }
-});
