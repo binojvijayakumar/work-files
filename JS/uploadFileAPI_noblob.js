@@ -3,12 +3,12 @@
 
 function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, taxProcID, targetUrl, serverRelativeUrl, libraryName,
     libraryInternalName, loginUserName, uploadServiceAPIUrl, statusCtrl, clientKey, userName) {
-    var file = getFile(fileContent, fileName);
+    
     var documentEntity = getDocumentEntity(metaDataCollection, jurID, taxProcID, fileName);
     var messagedata = getMessagedata(targetUrl, serverRelativeUrl, libraryName, libraryInternalName, loginUserName, uploadServiceAPIUrl);
 
     var data = new FormData();
-    data.append('uploadedFile', file, fileName);
+    data.append('uploadedFile', fileContent, fileName);
     data.append('newdocumentname', fileName);
     data.append('metadata', metaData);
     data.append('documentEntity', documentEntity);
@@ -17,10 +17,7 @@ function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, 
     data.append('libraryInternalName', messagedata.libraryInternalName);
     data.append('libraryName', messagedata.libraryName);
     data.append('loginUserName', messagedata.loginUserName);
-    // data.append('isPublishFromMysite', 'FALSE');
-    // data.append('mysiteWebAppUrl', '');
-    // data.append('fileServerRelativeUrl', '');
-    // data.append('mySiteFileName', '');
+    
     var objXhr = new XMLHttpRequest();
     objXhr.open('POST', messagedata.uploadServiceAPIUrl, true);
     objXhr.setRequestHeader('CSKII', clientKey);
@@ -33,45 +30,6 @@ function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, 
     };
     objXhr.withCredentials = true;
     objXhr.send(data);
-}
-
-function getFile(dataURI, fileName) {
-    // var byteString = atob(dataURI);
-    var mimeString = mime.getType(fileName)
-    // var ab = new ArrayBuffer(byteString.length);
-    // var ia = new Uint8Array(ab);
-    // for (var i = 0; i < byteString.length; i++) {
-    //     ia[i] = byteString.charCodeAt(i);
-    // }
-    // var blob = new Blob([ab], {
-    //     type: mimeString
-    // });
-    //return blob;
-    return b64toBlob(dataURI, mimeString);
-}
-
-function b64toBlob(b64Data, contentType, sliceSize) {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
-
-    var byteCharacters = atob(b64Data);
-    var byteArrays = [];
-
-    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-        var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-        var byteNumbers = new Array(slice.length);
-        for (var i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-        }
-
-        var byteArray = new Uint8Array(byteNumbers);
-
-        byteArrays.push(byteArray);
-    }
-
-    var blob = new Blob(byteArrays, { type: contentType });
-    return blob;
 }
 
 function getDocumentEntity(metaDataCollection, jurID, taxProcID, fileName) {
