@@ -1,4 +1,4 @@
-function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, taxProcID, targetUrl, serverRelativeUrl, libraryName,
+function uploadFileAPI(fileContent, fileName, metaData, metaDataCollection, jurID, taxProcID, targetUrl, serverRelativeUrl, libraryName,
     libraryInternalName, loginUserName, uploadServiceAPIUrl, statusCtrl, clientKey, userName) {
     
     var documentEntity = getDocumentEntity(metaDataCollection, jurID, taxProcID, fileName);
