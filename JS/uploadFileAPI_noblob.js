@@ -5,7 +5,7 @@ function uploadFile(fileContent, fileName, metaData, metaDataCollection, jurID, 
     var messagedata = getMessagedata(targetUrl, serverRelativeUrl, libraryName, libraryInternalName, loginUserName, uploadServiceAPIUrl);
 
     var data = new FormData();
-    data.append('uploadedFile', fileContent, fileName);
+    data.append('uploadedFile', fileContent);
     data.append('newdocumentname', fileName);
     data.append('metadata', metaData);
     data.append('documentEntity', documentEntity);
