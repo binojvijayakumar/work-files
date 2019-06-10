@@ -17,9 +17,12 @@ function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, c
         }],
         "ModuleName": "Documents"
     };
+    
     var custom_headers = {};
     custom_headers['CSKII'] = clientKey;
     custom_headers['CSKII_UPN'] = userName;
+    if(authHeader) custom_headers['Authorization'] = 'Bearer ' + authHeader;
+    
     $.ajax({
         type: "POST",
         url: apiURL,//"//qa4svc.apps.tax/api/documents/GetDocumentsFromDB/1/",
@@ -27,9 +30,6 @@ function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, c
         data: JSON.stringify(apiData),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        beforeSend: function (xhr) {
-            if(authHeader) xhr.setRequestHeader('Authorization', 'Bearer ' + authHeader);
-        },
         xhrFields: {
             withCredentials: true
         },
