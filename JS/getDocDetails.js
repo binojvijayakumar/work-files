@@ -1,4 +1,4 @@
-function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, ctrlid, clientKey, userName) {
+function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, ctrlid, clientKey, userName, authHeader) {
     var apiData = {
         "SortByColumn": "DocumentID",
         "SortType": "DESC",
@@ -27,6 +27,9 @@ function getDocDetails(apiURL, contetntType, taxProcess, Jurisdiction, itemID, c
         data: JSON.stringify(apiData),
         dataType: "json",
         contentType: "application/json; charset=utf-8",
+        beforeSend: function (xhr) {
+            if(authHeader) xhr.setRequestHeader('Authorization', 'Bearer ' + authHeader);
+        },
         xhrFields: {
             withCredentials: true
         },
