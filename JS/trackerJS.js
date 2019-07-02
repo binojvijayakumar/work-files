@@ -1,6 +1,10 @@
 var eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent';
 var eventer = window[eventMethod];
 var messageEvent = eventMethod == 'attachEvent' ? 'onmessage' : 'message';
+
+window.top.postMessage('appFormInitialized', 'https://devopssaas-qa.apps.tax');
+console.log('postMessage transmitted: "appFormInitialized"');
+
 eventer(messageEvent, function (e) {
     if (e.data == 'SaveAppForm') {
         var btnSaveToDB = document.getElementsByName('Save')[0];
