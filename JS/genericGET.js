@@ -1,8 +1,9 @@
 var latest_getAPIResponse;
-function getAPIResponse(apiURL, responseCtrl, cskii, cskii_upn) {
+function getAPIResponse(apiURL, responseCtrl, cskii, cskii_upn, authHeader) {
     var custom_headers = {};
     custom_headers['CSKII'] = cskii;
     custom_headers['CSKII_UPN'] = cskii_upn;
+    if (authHeader) custom_headers['Authorization'] = 'Bearer ' + authHeader;
     $.ajax({
         method: 'GET', crossDomain: true,
         xhrFields: { withCredentials: true },
