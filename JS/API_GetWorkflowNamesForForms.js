@@ -15,6 +15,7 @@ function process_api_getWorkflowNames(outputCtrl) {
                 var tempStep = JSON.parse(JSON.stringify(step));
                 tempStep.FormName = '';
                 tempStep.FormID = '';
+                tempStep.MilestoneName = milestone.Name;
                 result.push(tempStep);
 
             }
@@ -23,6 +24,7 @@ function process_api_getWorkflowNames(outputCtrl) {
                     var tempStep = JSON.parse(JSON.stringify(step));
                     tempStep.FormName = (step.Forms[j] && step.Forms[j].value) || '';
                     tempStep.FormID = (step.Forms[j] && step.Forms[j].ID) || '';
+                    tempStep.MilestoneName = milestone.Name
                     result.push(tempStep);
                 }
             }
