@@ -1,6 +1,6 @@
 var taxathand_article_generator_resultCtrl;
-function taxathand_article_generator(ctrlid, resultCtrl, filterIDs, filterStartDate, filterEndDate) {
-    if (taxathandArticlesResponse && taxathandArticlesResponse.length && ctrlid && resultCtrl && ctrlid.split('_').length == 3 && resultCtrl.split('_').length == 3) {
+function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, filterIDs, filterStartDate, filterEndDate) {
+    if (taxathandArticlesResponse && taxathandArticlesResponse.length && itemsPerRow && ctrlid && resultCtrl && ctrlid.split('_').length == 3 && resultCtrl.split('_').length == 3) {
         if (!$('#taxathand-article-styles').length) {
             $('<style id="taxathand-article-styles"> .card { border: 1px solid black; -webkit-box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); -moz-box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); position: relative; display: inline-block; width: 250px; height: 250px; margin: 10px; font-family: "Open Sans", sans-serif; } .upper { position: absolute; background-color: blue; top: 0; bottom: 60%; left: 0; right: 0; background: url(https://wallpaper-house.com/data/out/10/wallpaper2you_393149.jpg) 0 0 no-repeat; background-size: cover; } .upper-banner { position: absolute; bottom: 0; left: 0; right: 0; background-color: #0075e0; color: white; opacity: 0.8; } .middle { position: absolute; top: 40%; bottom: 10%; left: 0; right: 0; overflow: auto; } .lower { position: absolute; top: 90%; bottom: 0; left: 0; right: 0; text-align: right; font-size: small; } .text-container { padding-top: 2px; padding-left: 10px; padding-right: 10px; padding-bottom: 2px; } .upper-text { font-size: small; line-height: 1.4; } .middle-text { line-height: 1.2; } .upper a{text-decoration: none;color: inherit;} </style>').appendTo('head');
         }
@@ -24,9 +24,9 @@ function taxathand_article_generator(ctrlid, resultCtrl, filterIDs, filterStartD
         taxathand_article_generator_resultCtrl = resultCtrl;
         var node = '<table><tbody>';
         var k = 0;
-        for (var i = 0; i < Math.ceil(articlesToDisplay.length / 2); i++) {
+        for (var i = 0; i < Math.ceil(articlesToDisplay.length / itemsPerRow); i++) {
             node += '<tr>';
-            for (var j = 0; j < 2; j++) {
+            for (var j = 0; j < itemsPerRow; j++) {
                 var article = articlesToDisplay[k++];
                 if (article) {
                     node += '<td><div class="card"> <div class="upper" style="background-image:url(' + article.imagePath + ')"> <div class="upper-banner text-container"><a target="_blank" href="' + article.sharingWebURL + '"> <p class="upper-text">' + article.title + '</p></a> </div> </div> <div class="middle"> <div class="text-container"> <p class="middle-text"> ' + article.teaserText + ' </p> </div> </div> <div class="lower"> <div class="text-container"> <label for="followUp">Follow up needed ? Yes/No</label> <input name="followUp" id="followUp" type="checkbox" uuid="' + article.uuid + '" /> </div> </div> </div></td>';
