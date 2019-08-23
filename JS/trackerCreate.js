@@ -1,7 +1,7 @@
 // var portalServiceUrl = 'https://qa4svc.apps.tax';
 // var clientKey = "35bba0d9-f7e5-413a-8815-d2945c55b169";
 // var userName = "ankushbhatia";
-function execPostRequest_CreateTracker(ctrlTrigger, portalServiceUrl, clientKey, userName) {
+function execPostRequest_CreateTracker(ctrlTrigger, portalServiceUrl, clientKey, userName, authHeader) {
     var keys = ["Jurisdiction", "TaxProcess", "MasterObligation", "ItemName",
         "ItemOwner", "CIInternalDueDate", "CIDueDate", "TaxYear", "Period", "ReturnType",
         "IsNoDueDateItem", "RequesterName", "RequestingTeam", "Urgency",
@@ -12,11 +12,12 @@ function execPostRequest_CreateTracker(ctrlTrigger, portalServiceUrl, clientKey,
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i]; var element = document.getElementsByName(key)[0];
         var value = element ? element.value : "";
-        trackerData.push({ "ID": key, "value": value });        
+        trackerData.push({ "ID": key, "value": value });
     }
     var custom_headers = {};
     custom_headers['CSKII'] = clientKey;
     custom_headers['CSKII_UPN'] = userName;
+    if (authHeader) custom_headers['Authorization'] = 'Bearer ' + authHeader;
     var input = JSON.stringify(trackerData);
     $.ajax({
         type: 'POST',
