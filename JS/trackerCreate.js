@@ -2,23 +2,26 @@
 // var clientKey = "35bba0d9-f7e5-413a-8815-d2945c55b169";
 // var userName = "ankushbhatia";
 function execPostRequest_CreateTracker(ctrlTrigger, portalServiceUrl, clientKey, userName, authHeader) {
-    var keys = ["Jurisdiction", "TaxProcess", "MasterObligation", "ItemName",
-        "ItemOwner", "CIInternalDueDate", "CIDueDate", "TaxYear", "Period", "ReturnType",
-        "IsNoDueDateItem", "RequesterName", "RequestingTeam", "Urgency",
-        "WhatSystemsisimpactedbythissuggestion", "TypeofRequest", "ProjectDescription",
-        "TargetCompletionDate", "ProjectDeliverableDate", "Recurring", "OverallStatus", "Team"];
-
+    // var keys = ["Jurisdiction", "TaxProcess", "MasterObligation", "ItemName",
+    //     "ItemOwner", "CIInternalDueDate", "CIDueDate", "TaxYear", "Period", "ReturnType",
+    //     "IsNoDueDateItem", "RequesterName", "RequestingTeam", "Urgency",
+    //     "WhatSystemsisimpactedbythissuggestion", "TypeofRequest", "ProjectDescription",
+    //     "TargetCompletionDate", "ProjectDeliverableDate", "Recurring", "OverallStatus", "Team"];
+    var keys = ['Jurisdiction', 'TaxProcess', 'MasterObligation', 'ItemName', 'ItemOwner', 'CIInternalDueDate', 'CIDueDate', 'TaxYear', 'Period', 'LegalEntity', 'LegalEntityID', 'ReturnType', 'ParentEntityID', 'IsNoDueDateItem', 'FormName', 'EntityAcronym'];
+    
+    var trackerDataArray = [];
     var trackerData = [];
     for (var i = 0; i < keys.length; i++) {
         var key = keys[i]; var element = document.getElementsByName(key)[0];
         var value = element ? element.value : "";
         trackerData.push({ "ID": key, "value": value });
     }
+    trackerDataArray.push(trackerData);
     var custom_headers = {};
     custom_headers['CSKII'] = clientKey;
     custom_headers['CSKII_UPN'] = userName;
     if (authHeader) custom_headers['Authorization'] = 'Bearer ' + authHeader;
-    var input = JSON.stringify(trackerData);
+    var input = JSON.stringify(trackerDataArray);
     $.ajax({
         type: 'POST',
         url: portalServiceUrl + '/api/DynamicComplianceItem/CreateTrackerByForms/1',
