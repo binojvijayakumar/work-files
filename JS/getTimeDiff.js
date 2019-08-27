@@ -10,8 +10,10 @@ var registerTimeDiff = function (name, startstop) {
                 diffObj = this;
             }
         });
-        diffObj.end = Date.now();
-        diffObj.diff = (new Date(diffObj.end).getTime() - new Date(diffObj.start).getTime()) / 1000;
-        console.log(diffObj);
+        if (diffObj) {
+            diffObj.end = Date.now();
+            diffObj.diff = (new Date(diffObj.end).getTime() - new Date(diffObj.start).getTime()) / 1000;
+            console.log(diffObj);
+        }
     }
 }
