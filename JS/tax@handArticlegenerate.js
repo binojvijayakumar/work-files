@@ -43,7 +43,10 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedIt
             node += '</tr>';
         }
         node += '</tbody></table>';
-        if ($('#' + ctrlid)) $('#' + ctrlid).append(node);
+        if ($('#' + ctrlid)) {
+            $('#' + ctrlid + ' table').remove();
+            $('#' + ctrlid).append(node);
+        }
     }
 }
 
