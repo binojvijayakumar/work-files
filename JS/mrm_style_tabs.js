@@ -1,7 +1,7 @@
 function mrm_styleTabs_top(ctrlid, activeColor, borderColor) {
     if (ctrlid && ctrlid.split('_').length && ctrlid.split('_').length == 3) {
-        $('#mrm_style_Tabs_top').remove();
-        $(`<style id="mrm_style_Tabs_top">
+        $('#mrm_style_Tabs_top_' + ctrlid).remove();
+        $(`<style id="mrm_style_Tabs_top_` + ctrlid + `">
         #` + ctrlid + `_TabHead>ul>li,#` + ctrlid + `_TabHead>ul>li>a{background-color:transparent!important;border:none;}
         #` + ctrlid + `_TabHead>ul>li>a{padding:0;}
         #` + ctrlid + `_TabHead .ui-tabs-active{border-bottom: 3px solid ` + activeColor + ` !important;box-sizing:border-box;}
