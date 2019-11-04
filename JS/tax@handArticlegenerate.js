@@ -65,7 +65,7 @@ $(function () {
         } else {
             $box.prop("checked", false);
         }
-        var result = $box.attr('uuid') + '#;' + ($box.attr('checked') ? $box.attr('state') : 'NULL');
+        var result = $box.attr('uuid') + '#;' + ($box.prop('checked') ? $box.attr('state') : 'NULL');
         $('#' + taxathand_article_generator_resultCtrl).val(result);
         textBoxChangeEvent(taxathand_article_generator_resultCtrl, $('#' + taxathand_article_generator_resultCtrl).attr('name'), result, '', '');
     });
