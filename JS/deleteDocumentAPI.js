@@ -1,7 +1,8 @@
-function DeleteDocumentAPI(ids, tpid, jurid, targeturl, ispublished, apiurl, ctrlid, clientKey, userName) {
+function DeleteDocumentAPI(ids, tpid, jurid, targeturl, ispublished, apiurl, ctrlid, clientKey, userName, authHeader) {
     var custom_headers = {};
     custom_headers['CSKII'] = clientKey;
     custom_headers['CSKII_UPN'] = userName;
+    if (authHeader) custom_headers['Authorization'] = 'Bearer ' + authHeader;
     var ajaxData = {
         'DocumentIDs': $.map(ids.split(','), function (x) { return parseInt(x) }),
         'TPID': parseInt(tpid),

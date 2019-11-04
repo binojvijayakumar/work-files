@@ -1,7 +1,8 @@
-function InvokeAjax(method, data, ctrlId, url, clientKey, userName) {
+function InvokeAjax(method, data, ctrlId, url, clientKey, userName, authHeader) {
     var custom_headers = {};
     custom_headers['CSKII'] = clientKey;
     custom_headers['CSKII_UPN'] = userName;
+    if (authHeader) custom_headers['Authorization'] = 'Bearer ' + authHeader;
     $.ajax({
         method: method, crossDomain: true,
         xhrFields: { withCredentials: true },
