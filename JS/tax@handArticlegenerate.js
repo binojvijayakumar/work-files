@@ -1,5 +1,5 @@
 var taxathand_article_generator_resultCtrl;
-function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, filterIDCtrl, filterStartDate, filterEndDate) {
+function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, showArticlesFilterIDCtrl, hideArticlesFilterIDCtrl, filterStartDate, filterEndDate) {        
     if (taxathandArticlesResponse && taxathandArticlesResponse.length &&
         itemsPerRow &&
         ctrlid && ctrlid.split('_').length == 3 &&
@@ -7,18 +7,35 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYE
         if (!$('#taxathand-article-styles').length) {
             $('<style id="taxathand-article-styles"> .card { border: 1px solid black; -webkit-box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); -moz-box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); position: relative; display: inline-block; width: 200px; height: 250px; margin: 10px; font-family: "Open Sans", sans-serif; } .upper { position: absolute; background-color: blue; top: 0; bottom: 60%; left: 0; right: 0; background: url(https://wallpaper-house.com/data/out/10/wallpaper2you_393149.jpg) 0 0 no-repeat; background-size: cover; } .upper-banner { position: absolute; bottom: 0; left: 0; right: 0; background-color: #0075e0; color: white; opacity: 0.8; } .middle { position: absolute; top: 40%; bottom: 10%; left: 0; right: 0; overflow: auto; } .lower { position: absolute; top: 90%; bottom: 0; left: 0; right: 0; text-align: right; font-size: small; } .text-container { font-size:0.7rem; padding-top: 2px; padding-left: 10px; padding-right: 10px; padding-bottom: 2px; } .upper-text { font-size: small; line-height: 1.4; } .middle-text { line-height: 1.2; } .upper a{text-decoration: none;color: inherit;} </style>').appendTo('head');
         }
-        var articlesToDisplay = $.grep(taxathandArticlesResponse, function (v, i) {
-            var _filterID = _filterStartDate = _filterEndDate = true;
-            if (filterIDCtrl && filterIDCtrl.split('_').length == 3) {
-                var filterIDs = $('#' + filterIDCtrl).val().split(',');
-                _filterID = !($.inArray(v.uuid, filterIDs) !== -1);
+
+        var articlesToDisplay;
+        if (showArticlesFilterIDCtrl && showArticlesFilterIDCtrl.split('_').length == 3) {            
+            var showArticlesFilterIDs = $('#' + showArticlesFilterIDCtrl).val().split(',');            
+            articlesToDisplay = $.grep(taxathandArticlesResponse, function (v, i) {
+                return ($.inArray(v.uuid, showArticlesFilterIDs) !== -1);
+            });
+        }
+        var hideArticlesFilterIDs;
+        if (hideArticlesFilterIDCtrl && hideArticlesFilterIDCtrl.split('_').length == 3) {            
+            hideArticlesFilterIDs = $('#' + hideArticlesFilterIDCtrl).val().split(',');
+        }
+        if (filterStartDate) {
+            filterStartDate = filterStartDate.split('/');
+        }
+        if (filterEndDate) {
+            filterEndDate = filterEndDate.split('/');
+        }
+
+        articlesToDisplay = $.grep(articlesToDisplay || taxathandArticlesResponse, function (v, i) {
+            var _filterID, _filterStartDate, _filterEndDate;
+            _filterID = _filterStartDate = _filterEndDate = true
+            if (hideArticlesFilterIDs && hideArticlesFilterIDs.length) {
+                _filterID = !($.inArray(v.uuid, hideArticlesFilterIDs) !== -1);
             }
-            if (filterStartDate) {
-                filterStartDate = filterStartDate.split('/');
+            if (filterStartDate && filterStartDate.length) {
                 _filterStartDate = new Date(v.publishDateTime) <= new Date(filterStartDate[2], filterStartDate[0] - 1, filterStartDate[2]);
             }
-            if (filterEndDate) {
-                filterEndDate = filterEndDate.split('/');
+            if (filterEndDate && filterEndDate.length) {
                 _filterEndDate = new Date(v.publishDateTime) >= new Date(filterEndDate[2], filterEndDate[0] - 1, filterEndDate[2]);
             }
             return _filterID && _filterStartDate && _filterEndDate;
@@ -28,11 +45,11 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYE
         var node = '<table><tbody>';
         var k = 0;
         var actionedYESItems = [];
-        if (actionedYESItemsCtrl && actionedYESItemsCtrl.split('_').length == 3) {
+        if (actionedYESItemsCtrl && actionedYESItemsCtrl.split('_').length == 3) {            
             actionedYESItems = $('#' + actionedYESItemsCtrl).val().split(',');
         }
         var actionedNOItems = [];
-        if (actionedNOItemsCtrl && actionedNOItemsCtrl.split('_').length == 3) {
+        if (actionedNOItemsCtrl && actionedNOItemsCtrl.split('_').length == 3) {            
             actionedNOItems = $('#' + actionedNOItemsCtrl).val().split(',');
         }
         for (var i = 0; i < Math.ceil(articlesToDisplay.length / itemsPerRow); i++) {
@@ -66,7 +83,7 @@ $(function () {
             $box.prop("checked", false);
         }
         var result = $box.attr('uuid') + '#;' + ($box.prop('checked') ? $box.attr('state') : 'NULL');
-        $('#' + taxathand_article_generator_resultCtrl).val(result);
+        $('#' + taxathand_article_generator_resultCtrl).val(result);        
         textBoxChangeEvent(taxathand_article_generator_resultCtrl, $('#' + taxathand_article_generator_resultCtrl).attr('name'), result, '', '');
     });
 });
