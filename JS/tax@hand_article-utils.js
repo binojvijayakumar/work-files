@@ -5,8 +5,11 @@ var leftover_externalarticles_uuid = [];
 var taxathand_addexternalarticle = function (extArticleObj) {
     if (extArticleObj) {
         var tempObj = typeof extArticleObj == 'string' ? JSON.parse(extArticleObj) : extArticleObj;
-        if (taxathandExternalArticles && taxathandExternalArticles.length) {
+        if (taxathandExternalArticle && taxathandExternalArticle.length) {
             taxathandExternalArticle.push(...tempObj);
+        }
+        else {
+            taxathandExternalArticle = tempObj;
         }
     }
 }

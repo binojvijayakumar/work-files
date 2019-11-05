@@ -1,5 +1,5 @@
 var taxathand_article_generator_resultCtrl;
-function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, showArticlesFilterIDCtrl, hideArticlesFilterIDCtrl, filterStartDate, filterEndDate) {
+function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, showArticlesFilterIDCtrl, hideArticlesFilterIDCtrl, filterStartDate, filterEndDate, externalBannerColour) {
     if (taxathandArticlesResponse && taxathandArticlesResponse.length &&
         itemsPerRow &&
         ctrlid && ctrlid.split('_').length == 3 &&
@@ -9,12 +9,24 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYE
         }
 
         var taxathandArticlesResponseConcat = taxathandArticlesResponse.concat(taxathandExternalArticle, leftover_apiarticles);
-        var articlesToDisplay;
+        var articlesToDisplay, showArticlesFilterIDs;
         if (showArticlesFilterIDCtrl && showArticlesFilterIDCtrl.split('_').length == 3) {
-            var showArticlesFilterIDs = $('#' + showArticlesFilterIDCtrl).val().split(',');
+            showArticlesFilterIDs = $('#' + showArticlesFilterIDCtrl).val().split(',');
             articlesToDisplay = $.grep(taxathandArticlesResponseConcat, function (v, i) {
                 return ($.inArray(v.uuid, showArticlesFilterIDs) !== -1);
             });
+        }
+        if (articlesToDisplay && showArticlesFilterIDs && articlesToDisplay.length && showArticlesFilterIDs.length) {
+            var tempArr = [];
+            $.each(showArticlesFilterIDs, function (i, filterArritem) {
+                var articleItem = $.grep(articlesToDisplay, function (articlesArritem, j) {
+                    return articlesArritem.uuid == filterArritem;
+                });
+                if (articleItem && articleItem.length)
+                    tempArr.push(articleItem[0]);
+            });
+            if (tempArr.length);
+            articlesToDisplay = tempArr;
         }
         var hideArticlesFilterIDs;
         if (hideArticlesFilterIDCtrl && hideArticlesFilterIDCtrl.split('_').length == 3) {
