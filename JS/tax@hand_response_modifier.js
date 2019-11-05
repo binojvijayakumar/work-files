@@ -15,7 +15,8 @@ function taxathand_response_modifier(responseCtrl, outputCtrl) {
                     "relatedCountries": $.map(v.relatedCountries, function (cty) { return cty.displayName }).join(', '),
                     "publishDateTime": new Date(v.publishDateTime).toLocaleDateString('en-US'),
                     "sharingWebURL": v.sharingWebURL,
-                    "imagePath": v.imagePath
+                    "imagePath": v.imagePath,
+                    "source": "api"
                 })
             });
             if (result.length) {

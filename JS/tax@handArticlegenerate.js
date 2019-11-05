@@ -1,13 +1,13 @@
 var taxathand_article_generator_resultCtrl;
-function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, filterIDCtrl, filterStartDate, filterEndDate) {
+function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, filterIDCtrl, filterStartDate, filterEndDate, externalBannerColour) {
     if (taxathandArticlesResponse && taxathandArticlesResponse.length &&
         itemsPerRow &&
         ctrlid && ctrlid.split('_').length == 3 &&
         resultCtrl && resultCtrl.split('_').length == 3) {
         if (!$('#taxathand-article-styles').length) {
-            $('<style id="taxathand-article-styles"> .card { border: 1px solid black; -webkit-box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); -moz-box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); box-shadow: 3px 3px 10px -1px rgba(0, 0, 0, 0.75); position: relative; display: inline-block; width: 200px; height: 250px; margin: 10px; font-family: "Open Sans", sans-serif; } .upper { position: absolute; background-color: blue; top: 0; bottom: 60%; left: 0; right: 0; background: url(https://wallpaper-house.com/data/out/10/wallpaper2you_393149.jpg) 0 0 no-repeat; background-size: cover; } .upper-banner { position: absolute; bottom: 0; left: 0; right: 0; background-color: #0075e0; color: white; opacity: 0.8; } .middle { position: absolute; top: 40%; bottom: 10%; left: 0; right: 0; overflow: auto; } .lower { position: absolute; top: 90%; bottom: 0; left: 0; right: 0; text-align: right; font-size: small; } .text-container { font-size:0.7rem; padding-top: 2px; padding-left: 10px; padding-right: 10px; padding-bottom: 2px; } .upper-text { font-size: small; line-height: 1.4; } .middle-text { line-height: 1.2; } .upper a{text-decoration: none;color: inherit;} </style>').appendTo('head');
+            $('<style id="taxathand-article-styles">table.articles_container .card{border:1px solid #000;-webkit-box-shadow:3px 3px 10px -1px rgba(0,0,0,.75);-moz-box-shadow:3px 3px 10px -1px rgba(0,0,0,.75);box-shadow:3px 3px 10px -1px rgba(0,0,0,.75);position:relative;display:inline-block;width:200px;height:250px;margin:10px;font-family:"Open Sans",sans-serif}table.articles_container .upper{position:absolute;background-color:#00f;top:0;bottom:60%;left:0;right:0;background:url(https://wallpaper-house.com/data/out/10/wallpaper2you_393149.jpg) 0 0 no-repeat;background-size:cover}table.articles_container .upper-banner{position:absolute;bottom:0;left:0;right:0;background-color:#0075e0;color:#fff;opacity:.8}table.articles_container .upper-banner.external{background-color:' + (externalBannerColour || '#ff0000') + '}table.articles_container .middle{position:absolute;top:40%;bottom:10%;left:0;right:0;overflow:auto}table.articles_container .lower{position:absolute;top:90%;bottom:0;left:0;right:0;text-align:right;font-size:small}table.articles_container .text-container{font-size:.7rem;padding-top:2px;padding-left:10px;padding-right:10px;padding-bottom:2px}table.articles_container .upper-text{font-size:small;line-height:1.4}table.articles_container .middle-text{line-height:1.2}table.articles_container .upper a{text-decoration:none;color:inherit}</style>').appendTo('head');
         }
-        var articlesToDisplay = $.grep(taxathandArticlesResponse, function (v, i) {
+        var articlesToDisplay = $.grep(taxathandArticlesResponse.concat(taxathandExternalArticle, leftover_apiarticles), function (v, i) {
             var _filterID = _filterStartDate = _filterEndDate = true;
             if (filterIDCtrl && filterIDCtrl.split('_').length == 3) {
                 var filterIDs = $('#' + filterIDCtrl).val().split(',');
@@ -25,7 +25,7 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYE
         });
 
         taxathand_article_generator_resultCtrl = resultCtrl;
-        var node = '<table><tbody>';
+        var node = '<table class="articles_container"><tbody>';
         var k = 0;
         var actionedYESItems = [];
         if (actionedYESItemsCtrl && actionedYESItemsCtrl.split('_').length == 3) {
@@ -42,7 +42,7 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYE
                 if (article) {
                     var isCheckedYES = $.inArray(article.uuid, actionedYESItems) !== -1 ? 'checked' : '';
                     var isCheckedNO = $.inArray(article.uuid, actionedNOItems) !== -1 ? 'checked' : '';
-                    node += '<td><div class="card"> <div class="upper" style="background-image:url(' + article.imagePath + ')"> <div class="upper-banner text-container"><a target="_blank" href="' + article.sharingWebURL + '"> <p class="upper-text">' + article.title + '</p></a> </div> </div> <div class="middle"> <div class="text-container"> <p class="middle-text"> ' + article.teaserText + ' </p> </div> </div> <div class="lower"> <div class="text-container"> <label>Follow up needed ?</label><label><input name="followUp_' + k + '" state="YES" type="checkbox" uuid="' + article.uuid + '" ' + isCheckedYES + '/>YES</label><label><input name="followUp_' + k + '" type="checkbox" state="NO" uuid="' + article.uuid + '" ' + isCheckedNO + '/>NO</label></div> </div> </div></td>';
+                    node += '<td><div class="card"> <div class="upper" style="background-image:url(' + article.imagePath + ')"> <div class="upper-banner ' + (article.source != 'api' ? 'external' : '') + ' text-container"><a target="_blank" href="' + article.sharingWebURL + '"> <p class="upper-text">' + article.title + '</p></a> </div> </div> <div class="middle"> <div class="text-container"> <p class="middle-text"> ' + article.teaserText + ' </p> </div> </div> <div class="lower"> <div class="text-container"> <label>Follow up needed ?</label><label><input name="followUp_' + k + '" state="YES" type="checkbox" uuid="' + article.uuid + '" ' + isCheckedYES + '/>YES</label><label><input name="followUp_' + k + '" type="checkbox" state="NO" uuid="' + article.uuid + '" ' + isCheckedNO + '/>NO</label></div> </div> </div></td>';
                 }
             }
             node += '</tr>';
@@ -56,10 +56,10 @@ function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYE
 }
 
 $(function () {
-    $(document).on('change', '.card input:checkbox', function () {
+    $(document).on('change', 'table.articles_container .card input:checkbox', function () {
         var $box = $(this);
         if ($box.is(":checked")) {
-            var group = ".card input:checkbox[name='" + $box.attr("name") + "']";
+            var group = "table.articles_container .card input:checkbox[name='" + $box.attr("name") + "']";
             $(group).prop("checked", false);
             $box.prop("checked", true);
         } else {
