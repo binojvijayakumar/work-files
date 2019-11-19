@@ -37,5 +37,9 @@ var taxathand_assignleftoverarticles = function (articles, articletype) {
 }
 
 var taxathand_modifystate_yescheckbox = function (state, excludeid) {
-    $('.card input:checkbox[state="YES"]').not(`input:checkbox[uuid="${excludeid}"]`).prop('disabled', state == 'disabled');
+    $('.card input:checkbox[state="YES"]').not('.card input:checkbox[uuid="' + excludeid + '"]').prop('disabled', state == 'disabled');
+}
+
+var taxathand_update_pagedata = function (pageIdentifier){
+    taxathand_articles_pagedata[pageIdentifier] = $('table.articles_container').prop('outerHTML');
 }

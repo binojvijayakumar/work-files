@@ -105,9 +105,12 @@ $(function () {
         if ($box.is(":checked")) {
             var group = "table.articles_container .card input:checkbox[name='" + $box.attr("name") + "']";
             $(group).prop("checked", false);
+            $(group).removeAttr("checked");
             $box.prop("checked", true);
+            $box.attr("checked", true);
         } else {
             $box.prop("checked", false);
+            $box.removeAttr("checked");
         }
         var result = $box.attr('uuid') + '#;' + ($box.prop('checked') ? $box.attr('state') : 'NULL');
         $('#' + taxathand_article_generator_resultCtrl).val(result);
