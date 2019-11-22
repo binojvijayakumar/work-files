@@ -37,9 +37,24 @@ var taxathand_assignleftoverarticles = function (articles, articletype) {
 }
 
 var taxathand_modifystate_yescheckbox = function (state, excludeid) {
-    $('.card input:checkbox[state="YES"]').not('.card input:checkbox[uuid="' + excludeid + '"]').prop('disabled', state == 'disabled');
+    $('.card input:checkbox[state="YES"]')
+        .not('.card input:checkbox[uuid="' + excludeid + '"]')
+        .not('.card input:checkbox[remaindisabled="true"]')
+        .prop('disabled', state == 'disabled');
 }
 
-var taxathand_update_pagedata = function (pageIdentifier){
+var taxathand_update_pagedata = function (pageIdentifier) {
     taxathand_articles_pagedata[pageIdentifier] = $('table.articles_container').prop('outerHTML');
+}
+
+var taxathand_modifystate_uuids = function (state, uuids) {
+    uuids = uuids.split(',');
+    var elements = [];
+    $.each(uuids, function (i, val) {
+        elements.push('.card input:checkbox[uuid="' + val + '"]');
+    });
+    if (state == 'disabled')
+        $(elements.join(',')).attr('remaindisabled', true).prop('disabled', true);
+    else
+        $(elements.join(',')).removeAttr('remaindisabled').prop('disabled', false);
 }

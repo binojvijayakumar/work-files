@@ -2,8 +2,8 @@ var taxathand_article_generator_resultCtrl;
 var taxathand_articles_pagedata = {};
 var taxathand_articles_control;
 function taxathand_article_generator(ctrlid, resultCtrl, itemsPerRow, actionedYESItemsCtrl, actionedNOItemsCtrl, showArticlesFilterIDCtrl, hideArticlesFilterIDCtrl, filterStartDate, filterEndDate, externalBannerColour, pageIdentifier) {
-    if (taxathandArticlesResponse && taxathandArticlesResponse.length &&
-        itemsPerRow &&
+    taxathandArticlesResponse = taxathandArticlesResponse || [];
+    if (itemsPerRow &&
         ctrlid && ctrlid.split('_').length == 3 &&
         resultCtrl && resultCtrl.split('_').length == 3) {
         if (!$('#taxathand-article-styles').length) {
