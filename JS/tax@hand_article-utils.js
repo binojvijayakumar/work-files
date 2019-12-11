@@ -6,7 +6,8 @@ var taxathand_addexternalarticle = function (extArticleObj) {
     if (extArticleObj) {
         var tempObj = typeof extArticleObj == 'string' ? JSON.parse(extArticleObj) : extArticleObj;
         if (taxathandExternalArticle && taxathandExternalArticle.length) {
-            taxathandExternalArticle.push(...tempObj);
+            //taxathandExternalArticle.push(...tempObj);
+            taxathandExternalArticle.push.apply(taxathandExternalArticle, tempObj);
         }
         else {
             taxathandExternalArticle = tempObj;
